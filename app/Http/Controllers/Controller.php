@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Contracts\ComposerProxyContract;
 use App\Facades\HttpClient;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -18,7 +20,7 @@ class Controller extends BaseController
 
 	public function index()
 	{
-		$title = env('APP_TITLE', 'dd');
+		$title = config('composer.title');
 
 		return view('index', compact('title'));
 	}
@@ -28,7 +30,15 @@ class Controller extends BaseController
 		$path = '/';
 		$file = 'packages.json';
 
-		return $this->proxy->loadIgnoreLocalCache($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file));
+		$response = $this->proxy->loadIgnoreLocalCache($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file));
+
+		$content = json_decode($response, true);
+		foreach (['notify', 'notify-batch', 'search'] as $key) {
+			$content[$key] = config('composer.repository.' . $repo) . $content[$key];
+		}
+		$content['providers-url'] = '/' . $repo . $content['providers-url'];
+
+		return JsonResponse::create($content);
 	}
 
 	public function provider($repo, $provider, $hash)
@@ -36,7 +46,7 @@ class Controller extends BaseController
 		$path = "/p/";
 		$file = $provider . "$" . $hash . ".json";
 
-		return $this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file));
+		return Response::create($this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file)));
 	}
 
 	public function packageHashed($repo, $namespace, $package, $hash)
@@ -44,7 +54,7 @@ class Controller extends BaseController
 		$path = "/p/" . $namespace . "/";
 		$file = $package . "$" . $hash . ".json";
 
-		return $this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file));
+		return Response::create($this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file)));
 	}
 
 	public function package($repo, $namespace, $package)
@@ -52,7 +62,7 @@ class Controller extends BaseController
 		$path = "/p/" . $namespace . "/";
 		$file = $package . ".json";
 
-		return $this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file));
+		return Response::create($this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file)));
 	}
 
 	private function makeUrl($repo, $path, $file)
