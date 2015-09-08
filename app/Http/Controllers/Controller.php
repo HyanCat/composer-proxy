@@ -20,9 +20,11 @@ class Controller extends BaseController
 
 	public function index()
 	{
-		$title = config('composer.title');
+		$title       = config('composer.title');
+		$description = config('composer.description');
+		$mirror      = url() . '/' . config('composer.default');
 
-		return view('index', compact('title'));
+		return view('index', compact('title', 'description', 'mirror'));
 	}
 
 	public function packages($repo)
