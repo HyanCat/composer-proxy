@@ -22,6 +22,7 @@ class ComposerProxy implements ComposerProxyContract
 
 	public function loadIgnoreLocalCache($url, $localPath)
 	{
+		$this->makeDirIfNeeded($localPath);
 		$response = $this->loadFromRepository($url);
 		$this->makeLocalCache($response, $localPath);
 
