@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Contracts\ComposerProxyContract;
+use App\Contracts\ComposerSyncContract;
 use App\Traits\ComposerTrait;
 
-class ComposerProxy implements ComposerProxyContract
+class ComposerSync implements ComposerSyncContract
 {
 	use ComposerTrait;
 
-	public function load($url, $localPath)
+	public function pull($url, $localPath)
 	{
 		$cache = $this->checkLocalCache($localPath);
 		if (false === $cache) {
@@ -19,10 +19,10 @@ class ComposerProxy implements ComposerProxyContract
 			return $response;
 		}
 
-		return $cache;
+		return false;
 	}
 
-	public function loadIgnoreLocalCache($url, $localPath)
+	public function pullIgnoreLocalCache($url, $localPath)
 	{
 		$this->makeDirIfNeeded($localPath);
 		$response = $this->loadFromRepository($url);
@@ -30,5 +30,6 @@ class ComposerProxy implements ComposerProxyContract
 
 		return $response;
 	}
+
 
 }

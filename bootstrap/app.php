@@ -13,7 +13,6 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\HttpClientServiceProvider::class);
-$app->register(\App\Providers\ComposerProxyServiceProvider::class);
 
 $app->configure('composer');
 

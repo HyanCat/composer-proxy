@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Contracts\ComposerProxyContract;
 use App\Facades\HttpClient;
+use App\Traits\ComposerConfigTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+	use ComposerConfigTrait;
 
 	protected $proxy;
 
@@ -65,16 +67,6 @@ class Controller extends BaseController
 		$file = $package . ".json";
 
 		return Response::create($this->proxy->load($this->makeUrl($repo, $path, $file), $this->makeLocalPath($repo, $path, $file)));
-	}
-
-	private function makeUrl($repo, $path, $file)
-	{
-		return config('composer.repository.' . $repo) . $path . $file;
-	}
-
-	private function makeLocalPath($repo, $path, $file)
-	{
-		return storage_path(config('composer.cache.dir')) . "/" . $repo . $path . $file;
 	}
 
 }
