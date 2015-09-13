@@ -17,7 +17,7 @@ class HttpClientServiceProvider extends ServiceProvider
 	{
 		$this->app->bind('http.client', function ($app) {
 			$client = new Curl();
-			$client->setTimeout(30);
+			$client->setTimeout(120);
 
 			return new Browser($client);
 		});

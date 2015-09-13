@@ -24,6 +24,6 @@ class Kernel extends ConsoleKernel
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('composer:sync')->everyTenMinutes()->sendOutputTo(storage_path('logs') . 'composer.log');
+		$schedule->command('composer:sync')->everyTenMinutes()->sendOutputTo(storage_path('logs') . '/composer_' . date('Ymdhis') . '.log');
 	}
 }
