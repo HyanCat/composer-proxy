@@ -28,8 +28,11 @@ class ComposerSync extends Command
 
 	public function handle()
 	{
-		$packagesResponse = $this->sync->pullIgnoreLocalCache($this->makeUrl($this->repo, '/', 'packages.json'), $this->makeLocalPath($this->repo, '/', 'packages.json'));
-
+		$url   = $this->makeUrl($this->repo, '/', 'packages.json');
+		$local = $this->makeLocalPath($this->repo, '/', 'packages.json');
+		$this->info('pulling: ' . $url);
+		$packagesResponse = $this->sync->pullIgnoreLocalCache($url, $local);
+		$this->info('writting: ' . $local);
 		foreach (json_decode($packagesResponse)->{'provider-includes'} as $providerFormat => $hashArray) {
 			$pathAndFile = str_replace('%hash%', $hashArray->sha256, $providerFormat);
 			$url         = $this->makeUrl($this->repo, '/', $pathAndFile);
