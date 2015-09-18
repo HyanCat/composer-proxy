@@ -25,6 +25,6 @@ class Kernel extends ConsoleKernel
 	protected function schedule(Schedule $schedule)
 	{
 		date_default_timezone_set(config('app.timezone'));
-		$schedule->command('composer:sync')->everyTenMinutes()->sendOutputTo(storage_path('logs') . '/composer_' . date('Ymd_hi') . '.log');
+		$schedule->command('composer:sync')->everyThirtyMinutes()->sendOutputTo(storage_path('logs') . '/composer_' . date('Ymd_hi') . '.log');
 	}
 }
