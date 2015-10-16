@@ -27,5 +27,6 @@ class Kernel extends ConsoleKernel
 	{
 		date_default_timezone_set(config('app.timezone'));
 		$schedule->command('composer:sync')->everyThirtyMinutes()->sendOutputTo(storage_path('logs') . '/composer_' . date('Ymd_hi') . '.log');
+		$schedule->command('composer:clean')->daily()->sendOutputTo(storage_path('logs') . '/composer_clean_' . date('Ymd') . '.log');
 	}
 }
